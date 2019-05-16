@@ -18,40 +18,40 @@ public class LFUCacheTest {
         cacheFactory = new CacheFactory<>();
         cache = cacheFactory.createCache(3, EvictionStrategy.LFU);
 
-        cache.cache("key1", 1);
-        cache.cache("key1", 1);
-        cache.cache("key1", 1);
-        cache.cache("key1", 1);
-        cache.cache("key2", 2);
-        cache.cache("key2", 2);
-        cache.cache("key2", 2);
-        cache.cache("key3", 3);
-        cache.cache("key3", 3);
-        cache.cache("key4", 4);
-        cache.cache("key4", 4);
-        cache.cache("key5", 5);
+        cache.put("key1", 1);
+        cache.put("key1", 1);
+        cache.put("key1", 1);
+        cache.put("key1", 1);
+        cache.put("key2", 2);
+        cache.put("key2", 2);
+        cache.put("key2", 2);
+        cache.put("key3", 3);
+        cache.put("key3", 3);
+        cache.put("key4", 4);
+        cache.put("key4", 4);
+        cache.put("key5", 5);
 
     }
 
     @Test
     public void receiveNull() {
-        assertNull(cache.receive("key3"));
-        assertNull(cache.receive("key4"));
+        assertNull(cache.get("key3"));
+        assertNull(cache.get("key4"));
     }
 
     @Test
     public void receiveMostFrequently(){
-        assertEquals(Integer.valueOf(1), cache.receive("key1"));
+        assertEquals(Integer.valueOf(1), cache.get("key1"));
     }
 
     @Test
     public void receiveLast() {
-        assertEquals(Integer.valueOf(5), cache.receive("key5"));
+        assertEquals(Integer.valueOf(5), cache.get("key5"));
     }
 
     @Test
     public void removeElement() {
-        cache.delete("key5");
-        assertNull(cache.receive("key5"));
+        cache.remove("key5");
+        assertNull(cache.get("key5"));
     }
 }

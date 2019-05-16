@@ -2,48 +2,50 @@ package cache;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
-public class LFUCache<K, V> extends HashMap<K, V> implements Cache<K, V> {
+public class LFUCache<K, V> implements Cache<K, V> {
 
     private int capacity;
-    private HashMap<K, Integer> counts;
+    private Map<K, Integer> counts;
+    private Map<K, V> cache;
 
     public LFUCache(int capacity) {
         this.capacity = capacity;
         counts = new HashMap<>();
+        cache = new HashMap<>();
     }
 
-    public V cache(K key, V value) {
-        if (containsKey(key)) {
-            put(key, value);
-            return receive(key);
-        }
-
+    public V put(K key, V value) {
         if (size() == capacity) {
-            Optional<Entry<K, Integer>> minEntry = counts.entrySet().stream()
+            Optional<Map.Entry<K, Integer>> minEntry = counts.entrySet().stream()
                     .min(Comparator.comparing(entry -> entry.getValue()));
 
             K entryKey = minEntry.get().getKey();
 
-            delete(entryKey);
+            remove(entryKey);
         }
 
-        counts.put(key, 1);
+        cache.put(key, value);
 
-        return put(key, value);
-    }
-
-    public V receive(K key) {
-        if (containsKey(key)) {
-            Integer count = counts.get(key);
-            counts.put(key, ++count);
-        }
         return get(key);
     }
 
-    public V delete(K key) {
+    public V get(K key) {
+        if (cache.containsKey(key)) {
+            counts.compute(key, (k, count) -> count == null ? 1 : ++count);
+        }
+        return cache.get(key);
+    }
+
+    public V remove(K key) {
         counts.remove(key);
-        return remove(key);
+        return cache.remove(key);
+    }
+
+    @Override
+    public int size() {
+        return cache.size();
     }
 }
