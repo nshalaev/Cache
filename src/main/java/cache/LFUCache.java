@@ -18,7 +18,8 @@ public class LFUCache<K, V> implements Cache<K, V> {
     }
 
     public V put(K key, V value) {
-        if (size() == capacity) {
+        if (!cache.containsKey(key)
+                && size() == capacity) {
             Optional<Map.Entry<K, Integer>> minEntry = counts.entrySet().stream()
                     .min(Comparator.comparing(entry -> entry.getValue()));
 
