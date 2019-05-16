@@ -17,6 +17,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
         cache = new HashMap<>();
     }
 
+    @Override
     public V put(K key, V value) {
         if (!cache.containsKey(key)
                 && size() == capacity) {
@@ -33,6 +34,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
         return get(key);
     }
 
+    @Override
     public V get(K key) {
         if (cache.containsKey(key)) {
             counts.compute(key, (k, count) -> count == null ? 1 : ++count);
@@ -40,6 +42,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
         return cache.get(key);
     }
 
+    @Override
     public V remove(K key) {
         counts.remove(key);
         return cache.remove(key);
