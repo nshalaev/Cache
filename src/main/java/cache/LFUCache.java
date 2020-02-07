@@ -13,32 +13,34 @@ public class LFUCache<K, V> implements Cache<K, V> {
 
     public LFUCache(int capacity) {
         this.capacity = capacity;
-        counts = new HashMap<>();
-        cache = new HashMap<>();
+        counts = new HashMap<>(capacity);
+        cache = new HashMap<>(capacity);
     }
 
     @Override
     public V put(K key, V value) {
-        if (!cache.containsKey(key)
-                && size() == capacity) {
-            Optional<Map.Entry<K, Integer>> minEntry = counts.entrySet().stream()
-                    .min(Comparator.comparing(entry -> entry.getValue()));
-
-            K entryKey = minEntry.get().getKey();
-
-            remove(entryKey);
-        }
-
+        computeFrequency(key);
         cache.put(key, value);
-
+        if (size() > capacity) {
+            removeOverload();
+        }
         return get(key);
+    }
+
+    private void removeOverload() {
+        Optional<Map.Entry<K, Integer>> minEntry = counts.entrySet().stream()
+                .min(Comparator.comparing(entry -> entry.getValue()));
+        K entryKey = minEntry.get().getKey();
+        remove(entryKey);
+    }
+
+    private void computeFrequency(K key) {
+        counts.compute(key, (k, count) -> count == null ? 1 : ++count);
     }
 
     @Override
     public V get(K key) {
-        if (cache.containsKey(key)) {
-            counts.compute(key, (k, count) -> count == null ? 1 : ++count);
-        }
+        computeFrequency(key);
         return cache.get(key);
     }
 
