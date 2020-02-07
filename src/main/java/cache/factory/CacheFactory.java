@@ -21,11 +21,8 @@ public class CacheFactory<K, V> {
         switch (strategy) {
             case LFU:
                 return new LFUCache<>(capacity);
-            case LRU:
+            case LRU: default:
                 return new LRUCache<>(capacity);
-            default:
-                throw new IllegalStateException(
-                        "This eviction strategy is not supported: " + strategy);
         }
     }
 }
