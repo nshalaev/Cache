@@ -5,32 +5,28 @@ import cache.factory.EvictionStrategy;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class LFUCacheTest {
 
-    CacheFactory<String, Integer> cacheFactory;
     Cache<String, Integer> cache;
 
     @Before
-    public void init(){
-        cacheFactory = new CacheFactory<>();
+    public void preparation(){
+        CacheFactory<String, Integer> cacheFactory = new CacheFactory<>();
         cache = cacheFactory.createCache(3, EvictionStrategy.LFU);
-
         cache.put("key1", 1);
-        cache.put("key1", 1);
-        cache.put("key1", 1);
-        cache.put("key1", 1);
+        cache.get("key1");
+        cache.get("key1");
+        cache.get("key1");
         cache.put("key2", 2);
-        cache.put("key2", 2);
-        cache.put("key2", 2);
+        cache.get("key2");
+        cache.get("key2");
         cache.put("key3", 3);
-        cache.put("key3", 3);
+        cache.get("key3");
         cache.put("key4", 4);
-        cache.put("key4", 4);
+        cache.get("key4");
         cache.put("key5", 5);
-
     }
 
     @Test
@@ -40,18 +36,20 @@ public class LFUCacheTest {
     }
 
     @Test
-    public void receiveMostFrequently(){
-        assertEquals(Integer.valueOf(1), cache.get("key1"));
-    }
-
-    @Test
-    public void receiveLast() {
-        assertEquals(Integer.valueOf(5), cache.get("key5"));
+    public void receiveNotNull(){
+        assertNotNull(cache.get("key1"));
+        assertNotNull(cache.get("key2"));
+        assertNotNull(cache.get("key5"));
     }
 
     @Test
     public void removeElement() {
         cache.remove("key5");
         assertNull(cache.get("key5"));
+    }
+
+    @Test
+    public void getSize() {
+        assertEquals(3, cache.size());
     }
 }
