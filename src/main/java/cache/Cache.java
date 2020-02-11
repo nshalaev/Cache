@@ -9,6 +9,7 @@ public interface Cache<K, V> {
 
     /**
      * Put value to cache by key
+     * Cache keys must implement equals() and hashCode() methods.
      * @param key
      * @param value
      * @return Cached value
