@@ -12,6 +12,6 @@ Caches are created by CacheFactory with two parameters:
 <li>Eviction strategy type</li>
 </ul>
 
-LRU is default eviction type of cache.
+LRU is the default cache type.
 
 Cache keys must implement equals() and hashCode() methods.
