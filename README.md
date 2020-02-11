@@ -1,14 +1,17 @@
 # Cache
 
-This repository contains implementation of two caches:
 <ul>
+This repository contains implementation of two caches:
 <li>LFU - least frequently used</li>
 <li>LRU - least recently used</li>
 </ul>
 
-Caches are created by CacheFactory with two parameters:
 <ul>
+Caches are created by CacheFactory with two parameters:
 <li>Capacity</li>
 <li>Eviction strategy type</li>
 </ul>
+
 LRU is default eviction type of cache.
+
+Cache keys must implement equals() and hashCode() methods.
