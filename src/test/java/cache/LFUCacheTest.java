@@ -1,7 +1,5 @@
 package cache;
 
-import cache.factory.CacheFactory;
-import cache.factory.EvictionStrategy;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,12 +7,12 @@ import static org.junit.Assert.*;
 
 public class LFUCacheTest {
 
-    Cache<String, Integer> cache;
+    private Cache<String, Integer> cache;
+    private int maxCapacity = 3;
 
     @Before
-    public void preparation(){
-        CacheFactory<String, Integer> cacheFactory = new CacheFactory<>();
-        cache = cacheFactory.createCache(3, EvictionStrategy.LFU);
+    public void init(){
+        cache = new LFUCache<>(maxCapacity);
         cache.put("key1", 1);
         cache.get("key1");
         cache.get("key1");
@@ -50,6 +48,6 @@ public class LFUCacheTest {
 
     @Test
     public void getSize() {
-        assertEquals(3, cache.size());
+        assertEquals(maxCapacity, cache.size());
     }
 }

@@ -19,12 +19,11 @@ public class LFUCache<K, V> implements Cache<K, V> {
 
     @Override
     public V put(K key, V value) {
-        computeFrequency(key);
-        cache.put(key, value);
-        if (size() > capacity) {
+        if (!cache.containsKey(key) && size() == capacity) {
             removeOverload();
         }
-        return get(key);
+        computeFrequency(key);
+        return cache.put(key, value);
     }
 
     private void removeOverload() {
@@ -40,8 +39,11 @@ public class LFUCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(K key) {
-        computeFrequency(key);
-        return cache.get(key);
+        V value = cache.get(key);
+        if (value != null) {
+            computeFrequency(key);
+        }
+        return value;
     }
 
     @Override
